@@ -1,218 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Mind-Blowing Quiz</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        :root {
-            --main-bg: linear-gradient(135deg,#1e3c72 0%, #2a5298 100%);
-            --accent: #ffbe0b;
-            --correct: #06d6a0;
-            --incorrect: #ef476f;
-        }
-        body {
-            margin: 0; 
-            font-family: 'Segoe UI', sans-serif;
-            background: var(--main-bg);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #quiz-container {
-            background: rgba(255,255,255,0.13);
-            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
-            backdrop-filter: blur(10px);
-            border-radius: 26px;
-            padding: 40px 30px;
-            width: 350px;
-        }
-        h1 {
-            color: var(--accent);
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 2em;
-        }
-        .question {
-            font-size: 1.2em;
-            color: #fff;
-            margin-bottom: 20px;
-            min-height: 48px;
-            transition: color 0.3s;
-        }
-        .answer-btn {
-            display: block;
-            width: 100%;
-            margin: 10px 0;
-            padding: 12px;
-            border: none;
-            border-radius: 18px;
-            background: #fff;
-            color: #222;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background 0.35s, color 0.35s;
-        }
-        .answer-btn.correct {
-            background: var(--correct);
-            color: #fff;
-        }
-        .answer-btn.incorrect {
-            background: var(--incorrect);
-            color: #fff;
-        }
-        #progress {
-            width: 100%;
-            background: #eee;
-            border-radius: 14px;
-            overflow: hidden;
-            margin: 10px 0;
-            height: 10px;
-            box-shadow: 1px 2px 6px #2222;
-        }
-        #progress-bar {
-            height: 100%;
-            background: var(--accent);
-            width: 0;
-            transition: width 0.5s cubic-bezier(.35,1.01,.52,.97);
-        }
-        #next-btn, #restart-btn {
-            display: block;
-            margin: 30px auto 0;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 20px;
-            background: var(--accent);
-            color: #222;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        #next-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        #result {
-            color: #fff;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.2em;
-            animation: pop 1s forwards;
-            margin-top: 15px;
-        }
-        @keyframes pop {
-            0% { transform: scale(0.6);}
-            80% { transform: scale(1.05);}
-            100% { transform: scale(1);}
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sentient Quiz</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: url("sentient-logo.png") no-repeat center center fixed;
+      background-size: cover;
+      background-color: #050505;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #ff4a9a;
+      text-shadow: 0 0 20px #ff4a9a88;
+      margin-bottom: 20px;
+    }
+
+    .quiz-container {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 25px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 40px rgba(255, 74, 154, 0.4);
+      transition: all 0.5s ease;
+    }
+
+    button {
+      background-color: #ff4a9a;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      background-color: #ff007f;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 1.3rem;
+      color: #ff7dbb;
+      text-shadow: 0 0 10px #ff4a9a99;
+    }
+
+    .fade {
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
 </head>
 <body>
-    <div id="quiz-container">
-        <h1>Mind-Blowing Quiz</h1>
-        <div id="progress">
-            <div id="progress-bar"></div>
-        </div>
-        <div class="question" id="question"></div>
-        <div id="answers"></div>
-        <button id="next-btn" disabled>Next</button>
-        <div id="result"></div>
-        <button id="restart-btn" style="display:none;">Restart</button>
-    </div>
-    <script>
+  <h1>Sentient Quiz</h1>
+  <div class="quiz-container fade" id="quizBox">
+    <!-- Question content loads here dynamically -->
+  </div>
+
+  <script>
     const quizData = [
-        {
-            question: "What is the largest planet in our Solar System?",
-            answers: ["Earth","Jupiter","Saturn","Venus"],
-            correct: 1
-        },
-        {
-            question: "Which element has the chemical symbol 'O'?",
-            answers: ["Gold","Osmium","Oxygen","Oxide"],
-            correct: 2
-        },
-        {
-            question: "Who painted the Mona Lisa?",
-            answers: ["Vincent van Gogh","Leonardo da Vinci","Pablo Picasso","Claude Monet"],
-            correct: 1
-        }
+      {
+        question: "What does AGI stand for?",
+        options: [
+          { text: "Artificial General Intelligence", correct: true },
+          { text: "Automatic Graph Integration", correct: false },
+        ],
+      },
+      {
+        question: "Which language is mostly used to build AI systems?",
+        options: [
+          { text: "Python", correct: true },
+          { text: "HTML", correct: false },
+        ],
+      },
+      {
+        question: "Sentient AI aims to...",
+        options: [
+          { text: "Connect intelligent agents collaboratively", correct: true },
+          { text: "Replace human creativity", correct: false },
+        ],
+      },
     ];
-    let currentQ = 0, score = 0, answered = false;
-    const questionEl = document.getElementById("question");
-    const answersEl = document.getElementById("answers");
-    const nextBtn = document.getElementById("next-btn");
-    const progressBar = document.getElementById("progress-bar");
-    const resultEl = document.getElementById("result");
-    const restartBtn = document.getElementById("restart-btn");
+
+    let currentQuestion = 0;
+    let score = 0;
 
     function loadQuestion() {
-        answered = false;
-        nextBtn.disabled = true;
-        resultEl.textContent = '';
-        const q = quizData[currentQ];
-        questionEl.textContent = q.question;
-        answersEl.innerHTML = '';
-        q.answers.forEach((ans, i) => {
-            const btn = document.createElement('button');
-            btn.className = 'answer-btn';
-            btn.textContent = ans;
-            btn.onclick = () => selectAnswer(i, btn);
-            answersEl.appendChild(btn);
-        });
-        // Update progress bar
-        progressBar.style.width = ((currentQ/quizData.length)*100) + "%";
+      const quizBox = document.getElementById("quizBox");
+      const q = quizData[currentQuestion];
+      quizBox.innerHTML = `
+        <p><strong>Q${currentQuestion + 1}:</strong> ${q.question}</p>
+        ${q.options
+          .map(
+            (opt, i) =>
+              `<div><input type="radio" name="q" id="opt${i}" value="${opt.correct}">
+              <label for="opt${i}">${opt.text}</label></div>`
+          )
+          .join("")}
+        <button onclick="submitAnswer()">Submit</button>
+      `;
     }
 
-    function selectAnswer(idx, btn) {
-        if(answered) return;
-        answered = true;
-        const q = quizData[currentQ];
-        const buttons = answersEl.querySelectorAll(".answer-btn");
-        if(idx === q.correct) {
-            btn.classList.add('correct');
-            score++;
-            resultEl.textContent = "Correct! 🎉";
-        } else {
-            btn.classList.add('incorrect');
-            resultEl.textContent = "Oops! The answer is: " + q.answers[q.correct];
-            buttons[q.correct].classList.add('correct');
-        }
-        nextBtn.disabled = false;
-        // Disable all buttons after answer
-        buttons.forEach(b=>b.disabled=true);
-    }
-
-    nextBtn.onclick = () => {
-        currentQ++;
-        if(currentQ<quizData.length){
-            loadQuestion();
-        } else {
-            showResult();
-        }
+    function submitAnswer() {
+      const selected = document.querySelector('input[name="q"]:checked');
+      if (!selected) return alert("Please select an answer!");
+      if (selected.value === "true") score++;
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
     }
 
     function showResult() {
-        questionEl.textContent = '';
-        answersEl.innerHTML = '';
-        nextBtn.style.display = 'none';
-        resultEl.innerHTML = 
-          `You scored <span style="color:var(--accent);font-size:1.5em;">${score}</span>/${quizData.length}!` +
-          "<br>That's " + Math.round((score/quizData.length)*100) + "%";
-        restartBtn.style.display = 'block';
-        progressBar.style.width = "100%";
+      const quizBox = document.getElementById("quizBox");
+      quizBox.innerHTML = `
+        <h2>Quiz Completed!</h2>
+        <p class="result">You scored ${score} / ${quizData.length}</p>
+        <button onclick="restartQuiz()">Restart</button>
+      `;
     }
 
-    restartBtn.onclick = () => {
-        currentQ = 0;
-        score = 0;
-        nextBtn.style.display = 'block';
-        restartBtn.style.display = 'none';
-        loadQuestion();
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      loadQuestion();
     }
 
     loadQuestion();
-    </script>
+  </script>
 </body>
 </html>
 
