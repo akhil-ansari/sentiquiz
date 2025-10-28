@@ -6,154 +6,133 @@
   <title>Sentient Quiz</title>
   <style>
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: url("sentient-logo.png") no-repeat center center fixed;
-      background-size: cover;
-      background-color: #050505;
-      color: white;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
+      font-family: "Poppins", sans-serif;
+      color: #fff;
+      background: url("https://i.ibb.co/5hjsBbT/sentient-logo-bg.png") center/cover no-repeat fixed;
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: center;
-      backdrop-filter: blur(6px);
+      height: 100vh;
+      margin: 0;
+      backdrop-filter: blur(4px);
     }
 
     h1 {
+      color: #ff3ec9;
       font-size: 2.5rem;
-      color: #ff4a9a;
-      text-shadow: 0 0 20px #ff4a9a88;
+      text-shadow: 0 0 10px #ff3ec9;
       margin-bottom: 20px;
     }
 
     .quiz-container {
-      background: rgba(0, 0, 0, 0.7);
-      padding: 25px;
+      background-color: rgba(0, 0, 0, 0.85);
       border-radius: 20px;
-      width: 90%;
-      max-width: 500px;
-      margin: auto;
-      box-shadow: 0 0 40px rgba(255, 74, 154, 0.4);
-      transition: all 0.5s ease;
+      box-shadow: 0 0 30px #ff3ec9;
+      padding: 30px;
+      width: 400px;
+      text-align: center;
+      transition: 0.5s;
+      min-height: 200px;
+    }
+
+    .question {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin: 8px 0;
+      cursor: pointer;
     }
 
     button {
-      background-color: #ff4a9a;
-      color: white;
+      background-color: #ff3ec9;
       border: none;
-      padding: 12px 20px;
-      font-size: 16px;
+      color: white;
+      padding: 10px 25px;
       border-radius: 10px;
       cursor: pointer;
-      transition: background 0.3s;
-      margin-top: 15px;
+      font-size: 1rem;
+      transition: 0.3s;
     }
 
     button:hover {
-      background-color: #ff007f;
+      background-color: #ff64d2;
     }
 
-    .result {
+    #result {
       margin-top: 20px;
-      font-size: 1.3rem;
-      color: #ff7dbb;
-      text-shadow: 0 0 10px #ff4a9a99;
-    }
-
-    .fade {
-      animation: fadeIn 0.6s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: scale(0.98);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+      font-size: 1.2rem;
+      color: #ff64d2;
     }
   </style>
 </head>
 <body>
   <h1>Sentient Quiz</h1>
-  <div class="quiz-container fade" id="quizBox">
-    <!-- Question content loads here dynamically -->
+  <div class="quiz-container" id="quiz">
+    <div id="question-container"></div>
+    <button id="next-btn" style="display:none;">Next</button>
+    <p id="result"></p>
   </div>
 
   <script>
-    const quizData = [
+    const questions = [
       {
         question: "What does AGI stand for?",
-        options: [
-          { text: "Artificial General Intelligence", correct: true },
-          { text: "Automatic Graph Integration", correct: false },
-        ],
+        options: ["Artificial General Intelligence", "Automatic Graph Integration"],
+        answer: 0
       },
       {
         question: "Which language is mostly used to build AI systems?",
-        options: [
-          { text: "Python", correct: true },
-          { text: "HTML", correct: false },
-        ],
+        options: ["Python", "HTML"],
+        answer: 0
       },
       {
         question: "Sentient AI aims to...",
-        options: [
-          { text: "Connect intelligent agents collaboratively", correct: true },
-          { text: "Replace human creativity", correct: false },
-        ],
-      },
+        options: ["Connect intelligent agents collaboratively", "Replace human creativity"],
+        answer: 0
+      }
     ];
 
-    let currentQuestion = 0;
+    let current = 0;
     let score = 0;
 
+    const questionContainer = document.getElementById("question-container");
+    const nextBtn = document.getElementById("next-btn");
+    const result = document.getElementById("result");
+
     function loadQuestion() {
-      const quizBox = document.getElementById("quizBox");
-      const q = quizData[currentQuestion];
-      quizBox.innerHTML = `
-        <p><strong>Q${currentQuestion + 1}:</strong> ${q.question}</p>
-        ${q.options
-          .map(
-            (opt, i) =>
-              `<div><input type="radio" name="q" id="opt${i}" value="${opt.correct}">
-              <label for="opt${i}">${opt.text}</label></div>`
-          )
-          .join("")}
-        <button onclick="submitAnswer()">Submit</button>
+      const q = questions[current];
+      questionContainer.innerHTML = `
+        <div class="question">Q${current + 1}: ${q.question}</div>
+        ${q.options.map((opt, i) => `
+          <label>
+            <input type="radio" name="answer" value="${i}" /> ${opt}
+          </label>
+        `).join('')}
       `;
+      nextBtn.style.display = "none";
     }
 
-    function submitAnswer() {
-      const selected = document.querySelector('input[name="q"]:checked');
-      if (!selected) return alert("Please select an answer!");
-      if (selected.value === "true") score++;
-      currentQuestion++;
-      if (currentQuestion < quizData.length) {
+    questionContainer.addEventListener("change", () => {
+      nextBtn.style.display = "inline-block";
+    });
+
+    nextBtn.addEventListener("click", () => {
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if (!selected) return;
+      if (parseInt(selected.value) === questions[current].answer) score++;
+      current++;
+      if (current < questions.length) {
         loadQuestion();
       } else {
-        showResult();
+        questionContainer.innerHTML = "";
+        result.innerHTML = `🎯 You scored ${score} / ${questions.length}`;
+        nextBtn.style.display = "none";
       }
-    }
-
-    function showResult() {
-      const quizBox = document.getElementById("quizBox");
-      quizBox.innerHTML = `
-        <h2>Quiz Completed!</h2>
-        <p class="result">You scored ${score} / ${quizData.length}</p>
-        <button onclick="restartQuiz()">Restart</button>
-      `;
-    }
-
-    function restartQuiz() {
-      currentQuestion = 0;
-      score = 0;
-      loadQuestion();
-    }
+    });
 
     loadQuestion();
   </script>
