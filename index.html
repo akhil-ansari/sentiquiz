@@ -17,30 +17,21 @@
       align-items: center;
       justify-content: center;
       background: 
-        linear-gradient(145deg, rgba(0,0,0,0.95), rgba(20,0,25,0.95)),
-        url("https://www.google.com/url?sa=i&url=https%3A%2F%2Fcryptorank.io%2Fprice%2Fsentient&psig=AOvVaw3bDTCGORdPStepsK53dk8l&ust=1761752117059000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCIiWwJucx5ADFQAAAAAdAAAAABAE") center/cover no-repeat;
+        linear-gradient(160deg, rgba(0,0,0,0.9), rgba(25,0,40,0.95)),
+        url("https://i.ibb.co/5hjsBbT/sentient-logo-bg.png") center/cover no-repeat;
       background-blend-mode: overlay;
       background-attachment: fixed;
-      backdrop-filter: blur(2px);
     }
 
-    h1 {
-      color: #ff3ec9;
-      font-size: 2.6rem;
-      text-shadow: 0 0 15px #ff3ec9, 0 0 30px #ff0099;
-      margin-bottom: 20px;
-      letter-spacing: 1px;
-    }
-
-    .quiz-container {
-      background-color: rgba(0, 0, 0, 0.8);
-      border-radius: 20px;
-      box-shadow: 0 0 40px rgba(255, 62, 201, 0.4);
-      padding: 30px;
+    .quiz-box {
+      background: rgba(0, 0, 0, 0.75);
+      border: 2px solid rgba(255, 62, 201, 0.4);
+      border-radius: 30px;
+      box-shadow: 0 0 40px rgba(255, 62, 201, 0.5);
       width: 400px;
+      padding: 40px;
       text-align: center;
       animation: fadeIn 0.6s ease-in-out;
-      min-height: 200px;
     }
 
     @keyframes fadeIn {
@@ -48,39 +39,56 @@
       to { opacity: 1; transform: scale(1); }
     }
 
+    .title {
+      font-size: 1.2rem;
+      color: #ff3ec9;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 20px;
+    }
+
     .question {
       font-size: 1.1rem;
-      margin-bottom: 15px;
+      margin-bottom: 25px;
       font-weight: 500;
     }
 
-    label {
-      display: block;
-      margin: 8px 0;
-      cursor: pointer;
-      transition: color 0.3s;
+    .options {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
     }
 
-    label:hover {
-      color: #ff64d2;
+    .options label {
+      width: 100%;
+      background: rgba(255, 62, 201, 0.1);
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .options label:hover {
+      background: rgba(255, 62, 201, 0.25);
+      box-shadow: 0 0 10px rgba(255, 62, 201, 0.4);
     }
 
     input[type="radio"] {
       accent-color: #ff3ec9;
       margin-right: 8px;
-      cursor: pointer;
     }
 
     button {
       background-color: #ff3ec9;
       border: none;
       color: white;
-      padding: 10px 25px;
-      border-radius: 10px;
+      padding: 10px 30px;
+      border-radius: 12px;
       cursor: pointer;
       font-size: 1rem;
+      margin-top: 20px;
       transition: 0.3s;
-      margin-top: 10px;
     }
 
     button:hover {
@@ -93,31 +101,45 @@
       font-size: 1.2rem;
       color: #ff64d2;
     }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+      text-align: center;
+      color: #ff3ec9;
+      font-weight: 600;
+      font-size: 1.4rem;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #ff3ec9, 0 0 25px #ff0099;
+    }
   </style>
 </head>
 <body>
-  <h1>Sentient Quiz</h1>
-  <div class="quiz-container" id="quiz">
-    <div id="question-container"></div>
+  <div class="quiz-box">
+    <div class="title">Question</div>
+    <div class="question" id="question-text"></div>
+    <div class="options" id="options"></div>
     <button id="next-btn" style="display:none;">Next</button>
     <p id="result"></p>
   </div>
+
+  <footer>Sentient</footer>
 
   <script>
     const questions = [
       {
         question: "What does AGI stand for?",
-        options: ["Artificial General Intelligence", "Automatic Graph Integration"],
+        options: ["Artificial General Intelligence", "Automatic Graph Integration", "Advanced Global Interface", "Algorithmic Grid Intelligence"],
         answer: 0
       },
       {
-        question: "Which language is mostly used to build AI systems?",
-        options: ["Python", "HTML"],
+        question: "Which is the most used language for AI development?",
+        options: ["Python", "C++", "HTML", "PHP"],
         answer: 0
       },
       {
         question: "Sentient AI aims to...",
-        options: ["Connect intelligent agents collaboratively", "Replace human creativity"],
+        options: ["Connect intelligent agents collaboratively", "Replace human creativity", "Destroy data privacy", "Work offline only"],
         answer: 0
       }
     ];
@@ -125,24 +147,23 @@
     let current = 0;
     let score = 0;
 
-    const questionContainer = document.getElementById("question-container");
+    const questionText = document.getElementById("question-text");
+    const optionsContainer = document.getElementById("options");
     const nextBtn = document.getElementById("next-btn");
     const result = document.getElementById("result");
 
     function loadQuestion() {
       const q = questions[current];
-      questionContainer.innerHTML = `
-        <div class="question">Q${current + 1}: ${q.question}</div>
-        ${q.options.map((opt, i) => `
-          <label>
-            <input type="radio" name="answer" value="${i}" /> ${opt}
-          </label>
-        `).join('')}
-      `;
+      questionText.textContent = q.question;
+      optionsContainer.innerHTML = q.options.map((opt, i) => `
+        <label>
+          <input type="radio" name="answer" value="${i}" /> ${opt}
+        </label>
+      `).join('');
       nextBtn.style.display = "none";
     }
 
-    questionContainer.addEventListener("change", () => {
+    optionsContainer.addEventListener("change", () => {
       nextBtn.style.display = "inline-block";
     });
 
@@ -154,7 +175,8 @@
       if (current < questions.length) {
         loadQuestion();
       } else {
-        questionContainer.innerHTML = "";
+        questionText.textContent = "";
+        optionsContainer.innerHTML = "";
         result.innerHTML = `🎯 You scored ${score} / ${questions.length}`;
         nextBtn.style.display = "none";
       }
@@ -164,4 +186,5 @@
   </script>
 </body>
 </html>
+
 
