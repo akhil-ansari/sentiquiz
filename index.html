@@ -42,7 +42,7 @@
       to { transform: translate(-100px, -100px); }
     }
 
-    /* glowing aura */
+    /* GLOWING AURA */
     body::after {
       content: "";
       position: absolute;
@@ -175,36 +175,31 @@
       font-size: 1.1rem;
     }
 
-    /* SENTIENT FOOTER LOGO */
-  <div class="footer">
-  <p class="madeby">Made by Khaled</p>
-  <p class="sentient">Sentient</p>
-</div>
-.footer {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  z-index: 2;
-}
+    /* FOOTER */
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 2;
+    }
 
-.madeby {
-  color: #ff4dff;
-  font-size: 14px;
-  letter-spacing: 1px;
-  text-shadow: 0 0 8px #ff4dff, 0 0 16px #ff4dff;
-  margin: 0;
-}
+    .madeby {
+      color: #ff4dff;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px #ff4dff, 0 0 16px #ff4dff;
+      margin: 0;
+    }
 
-.sentient {
-  color: #ff4dff;
-  font-size: 22px;
-  font-weight: 700;
-  text-shadow: 0 0 12px #ff4dff, 0 0 24px #ff4dff, 0 0 40px #ff4dff;
-  margin: 4px 0 0 0;
-}
-
+    .sentient {
+      color: #ff4dff;
+      font-size: 22px;
+      font-weight: 700;
+      text-shadow: 0 0 12px #ff4dff, 0 0 24px #ff4dff, 0 0 40px #ff4dff;
+      margin: 4px 0 0 0;
+    }
   </style>
 </head>
 <body>
@@ -223,7 +218,11 @@
     <p id="result"></p>
   </div>
 
-  <footer>Sentient</footer>
+  <!-- FOOTER -->
+  <div class="footer">
+    <p class="madeby">Made by Khaled</p>
+    <p class="sentient">Sentient</p>
+  </div>
 
   <script>
     const questions = [
@@ -283,7 +282,7 @@
         answer: 1
       },
        {
-        question: "Which feature reflects Sentient’s aim to decentralise control of AGI?",
+        question: "What is the vision of Sentient in relation to AI alignment?",
         options: [
           "To make AI inaccessible",
           "To lock models behind paywalls only",
@@ -292,7 +291,6 @@
         ],
         answer: 2
       },
-      
     ];
 
     let current = 0;
@@ -339,6 +337,12 @@
       nextBtn.style.display = "none";
       skipBtn.style.display = "none";
     }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
+
 
     loadQuestion();
   </script>
