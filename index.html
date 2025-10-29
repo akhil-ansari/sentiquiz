@@ -176,19 +176,35 @@
     }
 
     /* SENTIENT FOOTER LOGO */
-    footer {
-      Text: Made By Khaled;
-      position: absolute;
-      bottom: 20px;
-      text-align: center;
-      width: 100%;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #ff3ec9;
-      letter-spacing: 2px;
-      text-shadow: 0 0 15px #ff3ec9, 0 0 40px #00ffd0;
-      z-index: 2;
-    }
+  <div class="footer">
+  <p class="madeby">Made by Khaled</p>
+  <p class="sentient">Sentient</p>
+</div>
+.footer {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 2;
+}
+
+.madeby {
+  color: #ff4dff;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px #ff4dff, 0 0 16px #ff4dff;
+  margin: 0;
+}
+
+.sentient {
+  color: #ff4dff;
+  font-size: 22px;
+  font-weight: 700;
+  text-shadow: 0 0 12px #ff4dff, 0 0 24px #ff4dff, 0 0 40px #ff4dff;
+  margin: 4px 0 0 0;
+}
+
   </style>
 </head>
 <body>
